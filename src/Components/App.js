@@ -24,12 +24,12 @@ class App extends Component {
     window.scrollTo(0, 0)
   }
 
-  handleSearch (e){
+  handleSearch = (e) => {
     this.setState({ searchTerm: e.target.value.toLowerCase() })
   }
 
   handleFilter = (e) => {
-    e.target.value === "No Filter" ? this.setState({ filterRating:"" }) : this.setState({ filterRating: e.target.value})
+    e.target.value === "No Filter" ? this.setState({ filterByRating:"" }) : this.setState({ filterByRating: e.target.value.toLowerCase()})
   }
 
   selectShow = (show) => {
@@ -42,9 +42,9 @@ class App extends Component {
 
   displayShows = () => {
     if (this.state.filterByRating){
-      return this.state.shows.filter((s)=> {
-        return s.rating.average >= this.state.filterByRating
-      })
+      return this.state.shows.filter((s)=> s.rating.average >= this.state.filterByRating)
+    } else if (this.state.searchTerm) {
+      return this.state.shows.filter((s) => s.name.toLowerCase().includes(this.state.searchTerm))
     } else {
       return this.state.shows
     }
@@ -53,7 +53,7 @@ class App extends Component {
   render (){
     return (
       <div>
-        <Nav handleFilter={this.handleFilter} handleSearch={this.handleSearch} searchTerm={this.state.searchTerm}/>
+        <Nav handleFilter={this.handleFilter} handleSearch={this.handleSearch} filterValue={this.state.filterByRating} searchTerm={this.state.searchTerm}/>
         <Grid celled>
           <Grid.Column width={5}>
             {!!this.state.selectedShow ? <SelectedShowContainer selectedShow={this.state.selectedShow} allEpisodes={this.state.episodes}/> : <div/>}
